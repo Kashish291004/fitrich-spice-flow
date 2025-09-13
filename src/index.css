@@ -2,95 +2,135 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* Fitrich Masala Spice-Inspired Design System 
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Spice Color Palette */
+    --turmeric: 47 95% 58%; /* Bright golden yellow */
+    --paprika: 9 82% 52%; /* Rich red */
+    --cumin: 32 28% 36%; /* Earthy brown */
+    --cardamom: 84 20% 50%; /* Muted green */
+    --cinnamon: 18 48% 45%; /* Warm brown */
+    --saffron: 39 100% 50%; /* Golden orange */
+    
+    /* Base Colors */
+    --background: 45 30% 96%; /* Warm off-white */
+    --foreground: 32 28% 20%; /* Dark cumin */
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 32 28% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 32 28% 20%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Turmeric Gold */
+    --primary: 47 95% 58%;
+    --primary-foreground: 32 28% 20%;
+    --primary-glow: 47 95% 75%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Paprika Red */
+    --secondary: 9 82% 52%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted - Light spice tones */
+    --muted: 45 30% 92%;
+    --muted-foreground: 32 28% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Cardamom Green */
+    --accent: 84 20% 50%;
+    --accent-foreground: 0 0% 100%;
 
+    /* Destructive - Stay red */
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Borders and inputs */
+    --border: 45 20% 85%;
+    --input: 45 20% 90%;
+    --ring: 47 95% 58%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
+    /* Sidebar - Warm tones */
+    --sidebar-background: 45 30% 96%;
+    --sidebar-foreground: 32 28% 20%;
+    --sidebar-primary: 47 95% 58%;
+    --sidebar-primary-foreground: 32 28% 20%;
+    --sidebar-accent: 45 30% 88%;
+    --sidebar-accent-foreground: 32 28% 20%;
+    --sidebar-border: 45 20% 80%;
+    --sidebar-ring: 47 95% 58%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--turmeric)), hsl(var(--saffron)));
+    --gradient-warm: linear-gradient(180deg, hsl(var(--background)), hsl(45 30% 92%));
+    --gradient-spice: linear-gradient(45deg, hsl(var(--paprika)), hsl(var(--turmeric)));
 
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Shadows */
+    --shadow-warm: 0 4px 20px hsl(var(--turmeric) / 0.2);
+    --shadow-elevated: 0 8px 30px hsl(var(--cumin) / 0.15);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark mode spice theme */
+    --background: 32 28% 8%; /* Dark cumin background */
+    --foreground: 45 30% 90%; /* Light warm text */
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 32 28% 12%;
+    --card-foreground: 45 30% 90%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 32 28% 12%;
+    --popover-foreground: 45 30% 90%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Primary stays turmeric but adjusted */
+    --primary: 47 85% 55%;
+    --primary-foreground: 32 28% 8%;
+    --primary-glow: 47 85% 65%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* Secondary - darker paprika */
+    --secondary: 9 70% 45%;
+    --secondary-foreground: 45 30% 90%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    /* Muted dark tones */
+    --muted: 32 20% 15%;
+    --muted-foreground: 45 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Accent - muted cardamom */
+    --accent: 84 15% 40%;
+    --accent-foreground: 45 30% 90%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 45 30% 90%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 32 20% 20%;
+    --input: 32 20% 18%;
+    --ring: 47 85% 55%;
+
+    /* Dark sidebar */
+    --sidebar-background: 32 28% 10%;
+    --sidebar-foreground: 45 30% 85%;
+    --sidebar-primary: 47 85% 55%;
+    --sidebar-primary-foreground: 32 28% 8%;
+    --sidebar-accent: 32 20% 15%;
+    --sidebar-accent-foreground: 45 30% 85%;
+    --sidebar-border: 32 20% 20%;
+    --sidebar-ring: 47 85% 55%;
+
+    /* Dark gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--turmeric)), hsl(var(--saffron)));
+    --gradient-warm: linear-gradient(180deg, hsl(var(--background)), hsl(32 20% 12%));
+    --gradient-spice: linear-gradient(45deg, hsl(var(--paprika)), hsl(var(--turmeric)));
+
+    /* Dark shadows */
+    --shadow-warm: 0 4px 20px hsl(0 0% 0% / 0.3);
+    --shadow-elevated: 0 8px 30px hsl(0 0% 0% / 0.4);
   }
 }
 

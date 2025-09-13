@@ -22,6 +22,7 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          glow: "hsl(var(--primary-glow))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -57,6 +58,26 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Spice color palette
+        turmeric: "hsl(var(--turmeric))",
+        paprika: "hsl(var(--paprika))",
+        cumin: "hsl(var(--cumin))",
+        cardamom: "hsl(var(--cardamom))",
+        cinnamon: "hsl(var(--cinnamon))",
+        saffron: "hsl(var(--saffron))",
+      },
+      backgroundImage: {
+        "gradient-primary": "var(--gradient-primary)",
+        "gradient-warm": "var(--gradient-warm)", 
+        "gradient-spice": "var(--gradient-spice)",
+      },
+      boxShadow: {
+        "warm": "var(--shadow-warm)",
+        "elevated": "var(--shadow-elevated)",
+      },
+      transitionTimingFunction: {
+        "smooth": "var(--transition-smooth)",
+        "bounce": "var(--transition-bounce)",
       },
       borderRadius: {
         lg: "var(--radius)",
