@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import InventoryManagement from '@/components/inventory/InventoryManagement';
 
 interface DashboardStats {
   totalSales: number;
@@ -33,6 +34,7 @@ const AdminDashboard = () => {
     pendingPayments: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('dashboard');
   const { toast } = useToast();
 
   useEffect(() => {
@@ -164,149 +166,170 @@ const AdminDashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Business Dashboard</h1>
-          <p className="text-muted-foreground">Overview of your business performance</p>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
+            <p className="text-muted-foreground">Manage your business operations</p>
+          </div>
+          <div className="flex items-center gap-4">
+            <TabsList className="grid w-auto grid-cols-2">
+              <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+              <TabsTrigger value="inventory">Inventory</TabsTrigger>
+            </TabsList>
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">
+                {new Date().toLocaleDateString('en-IN', { 
+                  weekday: 'long', 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </span>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">
-            {new Date().toLocaleDateString('en-IN', { 
-              weekday: 'long', 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            })}
-          </span>
-        </div>
-      </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-        {statCards.map((stat, index) => (
-          <Card key={index} className="transition-smooth hover:shadow-warm">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {stat.title}
-              </CardTitle>
-              <div className={`p-2 rounded-lg ${stat.bgColor}`}>
-                <stat.icon className={`h-4 w-4 ${stat.color}`} />
-              </div>
+        <TabsContent value="dashboard" className="space-y-6">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            {statCards.map((stat, index) => (
+              <Card key={index} className="transition-smooth hover:shadow-warm">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">
+                    {stat.title}
+                  </CardTitle>
+                  <div className={`p-2 rounded-lg ${stat.bgColor}`}>
+                    <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-foreground">{stat.value}</div>
+                  <p className="text-xs text-muted-foreground">{stat.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Quick Actions */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="shadow-elevated">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Package className="h-5 w-5 text-primary" />
+                  Inventory Management
+                </CardTitle>
+                <CardDescription>
+                  Manage your stock levels and product catalog
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button 
+                  className="w-full justify-start" 
+                  variant="outline"
+                  onClick={() => setActiveTab('inventory')}
+                >
+                  <Package className="h-4 w-4 mr-2" />
+                  View Stock Inventory
+                </Button>
+                <Button 
+                  className="w-full justify-start" 
+                  variant="outline"
+                  onClick={() => setActiveTab('inventory')}
+                >
+                  <TrendingUp className="h-4 w-4 mr-2" />
+                  Manage Stock
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-elevated">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-primary" />
+                  Sales Analytics
+                </CardTitle>
+                <CardDescription>
+                  Track performance and generate reports
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button className="w-full justify-start" variant="outline">
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  Sales Reports
+                </Button>
+                <Button className="w-full justify-start" variant="outline">
+                  <Users className="h-4 w-4 mr-2" />
+                  Salesman Performance
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Recent Activity */}
+          <Card className="shadow-elevated">
+            <CardHeader>
+              <CardTitle>Recent Activity</CardTitle>
+              <CardDescription>Latest business activities and alerts</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">{stat.description}</p>
+              <div className="space-y-4">
+                {stats.lowStockProducts > 0 && (
+                  <div className="flex items-center gap-3 p-3 bg-destructive/10 rounded-lg">
+                    <AlertTriangle className="h-5 w-5 text-destructive" />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Low Stock Alert</p>
+                      <p className="text-xs text-muted-foreground">
+                        {stats.lowStockProducts} products need restocking
+                      </p>
+                    </div>
+                    <Badge variant="destructive">{stats.lowStockProducts}</Badge>
+                  </div>
+                )}
+                
+                {stats.pendingOrders > 0 && (
+                  <div className="flex items-center gap-3 p-3 bg-paprika/10 rounded-lg">
+                    <ShoppingCart className="h-5 w-5 text-paprika" />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Pending Orders</p>
+                      <p className="text-xs text-muted-foreground">
+                        {stats.pendingOrders} orders awaiting processing
+                      </p>
+                    </div>
+                    <Badge className="bg-paprika text-white">{stats.pendingOrders}</Badge>
+                  </div>
+                )}
+
+                {stats.pendingPayments > 0 && (
+                  <div className="flex items-center gap-3 p-3 bg-accent/10 rounded-lg">
+                    <DollarSign className="h-5 w-5 text-accent" />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Pending Payments</p>
+                      <p className="text-xs text-muted-foreground">
+                        ₹{stats.pendingPayments.toLocaleString()} in outstanding payments
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {stats.lowStockProducts === 0 && stats.pendingOrders === 0 && stats.pendingPayments === 0 && (
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 bg-turmeric/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <TrendingUp className="h-8 w-8 text-turmeric" />
+                    </div>
+                    <p className="text-muted-foreground">All systems running smoothly!</p>
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
-        ))}
-      </div>
+        </TabsContent>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="shadow-elevated">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Package className="h-5 w-5 text-primary" />
-              Inventory Management
-            </CardTitle>
-            <CardDescription>
-              Manage your stock levels and product catalog
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button className="w-full justify-start" variant="outline">
-              <Package className="h-4 w-4 mr-2" />
-              View Stock Inventory
-            </Button>
-            <Button className="w-full justify-start" variant="outline">
-              <TrendingUp className="h-4 w-4 mr-2" />
-              Add Stock Movement
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-elevated">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5 text-primary" />
-              Sales Analytics
-            </CardTitle>
-            <CardDescription>
-              Track performance and generate reports
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button className="w-full justify-start" variant="outline">
-              <BarChart3 className="h-4 w-4 mr-2" />
-              Sales Reports
-            </Button>
-            <Button className="w-full justify-start" variant="outline">
-              <Users className="h-4 w-4 mr-2" />
-              Salesman Performance
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recent Activity */}
-      <Card className="shadow-elevated">
-        <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
-          <CardDescription>Latest business activities and alerts</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {stats.lowStockProducts > 0 && (
-              <div className="flex items-center gap-3 p-3 bg-destructive/10 rounded-lg">
-                <AlertTriangle className="h-5 w-5 text-destructive" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Low Stock Alert</p>
-                  <p className="text-xs text-muted-foreground">
-                    {stats.lowStockProducts} products need restocking
-                  </p>
-                </div>
-                <Badge variant="destructive">{stats.lowStockProducts}</Badge>
-              </div>
-            )}
-            
-            {stats.pendingOrders > 0 && (
-              <div className="flex items-center gap-3 p-3 bg-paprika/10 rounded-lg">
-                <ShoppingCart className="h-5 w-5 text-paprika" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Pending Orders</p>
-                  <p className="text-xs text-muted-foreground">
-                    {stats.pendingOrders} orders awaiting processing
-                  </p>
-                </div>
-                <Badge className="bg-paprika text-white">{stats.pendingOrders}</Badge>
-              </div>
-            )}
-
-            {stats.pendingPayments > 0 && (
-              <div className="flex items-center gap-3 p-3 bg-accent/10 rounded-lg">
-                <DollarSign className="h-5 w-5 text-accent" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Pending Payments</p>
-                  <p className="text-xs text-muted-foreground">
-                    ₹{stats.pendingPayments.toLocaleString()} in outstanding payments
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {stats.lowStockProducts === 0 && stats.pendingOrders === 0 && stats.pendingPayments === 0 && (
-              <div className="text-center py-8">
-                <div className="w-16 h-16 bg-turmeric/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp className="h-8 w-8 text-turmeric" />
-                </div>
-                <p className="text-muted-foreground">All systems running smoothly!</p>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+        <TabsContent value="inventory">
+          <InventoryManagement />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
