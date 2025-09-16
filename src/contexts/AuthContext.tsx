@@ -93,34 +93,64 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signIn = async (username: string, password: string) => {
     try {
       setLoading(true);
-      
-      // Simple test credentials check
+
+      // Simple test credentials check (no Supabase calls)
       const testCredentials = [
         { username: 'admin', password: 'admin123' },
         { username: 'salesman1', password: 'salesman123' },
         { username: 'salesman2', password: 'salesman123' },
-        { username: 'manager', password: 'manager123' }
+        { username: 'manager', password: 'manager123' }, // treated as admin role for testing
       ];
 
       const isValidCredential = testCredentials.some(
-        cred => cred.username === username && cred.password === password
+        (cred) => cred.username === username && cred.password === password
       );
 
       if (!isValidCredential) {
         return { error: { message: 'Invalid username or password' } };
       }
 
-      // Get the profile for this username
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('username', username)
-        .eq('is_active', true)
-        .single();
+      // Mock profiles (bypass DB for testing)
+      const profileMap: Record<string, Profile> = {
+        admin: {
+          id: '11111111-1111-1111-1111-111111111111',
+          user_id: '11111111-1111-1111-1111-111111111111',
+          username: 'admin',
+          full_name: 'Admin User',
+          role: 'admin',
+          phone: '+91 99999 00001',
+          is_active: true,
+        },
+        salesman1: {
+          id: '22222222-2222-2222-2222-222222222222',
+          user_id: '22222222-2222-2222-2222-222222222222',
+          username: 'salesman1',
+          full_name: 'Raj Kumar',
+          role: 'salesman',
+          phone: '+91 99999 00002',
+          is_active: true,
+        },
+        salesman2: {
+          id: '33333333-3333-3333-3333-333333333333',
+          user_id: '33333333-3333-3333-3333-333333333333',
+          username: 'salesman2',
+          full_name: 'Priya Sharma',
+          role: 'salesman',
+          phone: '+91 99999 00003',
+          is_active: true,
+        },
+        manager: {
+          id: '44444444-4444-4444-4444-444444444444',
+          user_id: '44444444-4444-4444-4444-444444444444',
+          username: 'manager',
+          full_name: 'Manager User',
+          role: 'admin', // map to admin for testing
+          phone: '+91 99999 00004',
+          is_active: true,
+        },
+      };
 
-      if (profileError || !profileData) {
-        return { error: { message: 'Invalid username or account is inactive' } };
-      }
+      const profileData = profileMap[username as keyof typeof profileMap];
 
       // Create a mock user and session for testing
       const mockUser = {
@@ -131,7 +161,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
         user_metadata: {},
-        app_metadata: {}
+        app_metadata: {},
       } as User;
 
       const mockSession = {
@@ -140,7 +170,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         expires_in: 3600,
         expires_at: Math.floor(Date.now() / 1000) + 3600,
         token_type: 'bearer',
-        user: mockUser
+        user: mockUser,
       } as Session;
 
       // Set the mock session and user
